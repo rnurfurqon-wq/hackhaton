@@ -46,6 +46,11 @@ Setelah ringkasan, tombol **Lihat review** membuka tab Review (grafik ala chess.
 2. Jawab dengan mikrofon (Chrome) atau ketik. Kalau pengenalan suara gagal karena internet, aplikasi otomatis pindah ke kotak ketik.
 3. Jalankan sekali sesi mode Demo yang sukses sebelum presentasi. Pertanyaannya tersimpan di `demo_cache.json` sebagai cadangan kalau API lambat.
 
+## Integrasi CDC Cakrawala (untuk slide Impact)
+
+- Mahasiswa bisa langsung membuka CDC Cakrawala dari langkah deskripsi posisi, lalu menempel lowongan yang ditemukan di sana.
+- CDC juga bisa membuka NgBlu dengan lowongan yang sudah terisi, cukup lewat tautan: `/?source=cdc&company=...&type=kerja&jd=...`. Ini bisa dipakai sebagai tombol "Latihan interview untuk lowongan ini" di setiap halaman lowongan CDC.
+
 ## Cadangan terakhir: jalankan di laptop
 
 Kalau situs tidak bisa dibuka sama sekali:

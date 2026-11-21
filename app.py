@@ -41,6 +41,9 @@ SELECTION_TYPES = ("kerja", "kepanitiaan", "beasiswa")
 # ---------------------------------------------------------------------------
 APP_NAME = os.getenv("APP_NAME", "NgBlu").strip() or "NgBlu"
 APP_TAGLINE = "Latihan interview bareng Pak Kumis"
+# Portal karier kampus (CDC). Hanya ditautkan, tidak di-scrape dan tidak login atas nama pengguna.
+CDC_URL = os.getenv("CDC_URL", "https://cdc.cakrawala.ac.id/login").strip()
+CDC_NAME = os.getenv("CDC_NAME", "CDC Cakrawala").strip()
 LOGO_CANDIDATES = ("img/logo.png", "img/logo.svg", "img/logo.webp", "img/logo.jpg")
 
 
@@ -57,7 +60,8 @@ def inject_brand():
     rel = logo_path()
     version = int((Path(app.static_folder) / rel).stat().st_mtime)  # cache-buster saat logo diganti
     fav = "img/favicon.png" if (Path(app.static_folder) / "img/favicon.png").is_file() else rel
-    return {"brand": {"name": APP_NAME, "tagline": APP_TAGLINE, "logo": rel, "logo_v": version, "favicon": fav}}
+    return {"brand": {"name": APP_NAME, "tagline": APP_TAGLINE, "logo": rel, "logo_v": version, "favicon": fav},
+            "cdc": {"url": CDC_URL, "name": CDC_NAME}}
 
 
 def to_int(value, default: int) -> int:

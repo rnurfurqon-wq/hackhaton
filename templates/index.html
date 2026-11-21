@@ -86,11 +86,21 @@
       </fieldset>
       <div class="field">
         <label for="job-text">Deskripsi posisi</label>
+        <p class="note-pill note-info" id="jd-prefill-note" hidden></p>
         <textarea id="job-text" rows="7" placeholder="Tempel deskripsi lowongan, open recruitment, atau seleksi beasiswa"></textarea>
         <label class="file-inline">
           <input id="job-file" type="file" accept="application/pdf" class="sr-only">
           <span class="link-btn">atau unggah PDF lowongan</span> <span id="job-file-name" class="muted"></span>
         </label>
+        {% if cdc.url %}
+        <div class="cdc-card">
+          <div>
+            <p class="cdc-title">Belum punya lowongan?</p>
+            <p class="muted small">Cari di {{ cdc.name }} (login dengan akun kampusmu di sana), salin deskripsi lowongannya, lalu tempel di kotak atas.</p>
+          </div>
+          <a class="btn" id="cdc-link" href="{{ cdc.url }}" target="_blank" rel="noopener noreferrer">Buka {{ cdc.name }} ↗</a>
+        </div>
+        {% endif %}
       </div>
     </div>
 

@@ -12,6 +12,11 @@ Versi ini menggantikan zip "Cermin + Pak Kumis". Nama folder tetap `hackathongok
 - Hijau tetap dipakai hanya untuk arti "bagus/berhasil" (syarat terpenuhi, skor tinggi, kekuatan) dan tombol telepon hijau "mulai panggilan", supaya makna warnanya tetap jelas.
 - Versi logo lengkap (kucing + tulisan) dengan latar transparan untuk slide: `logo-ngblu-transparan.png` di folder proyek.
 
+### Integrasi ringan dengan CDC Cakrawala (update ketiga)
+- Di langkah deskripsi posisi ada kartu **"Belum punya lowongan? Buka CDC Cakrawala ↗"** yang membuka https://cdc.cakrawala.ac.id/login di tab baru. Mahasiswa login di CDC sendiri, menyalin deskripsi lowongan, lalu menempelnya ke NgBlu. NgBlu tidak login, tidak menyimpan kredensial, dan tidak mengambil data dari CDC.
+- **Tautan masuk dari CDC (siap dipakai kelak):** `https://USERNAME.pythonanywhere.com/?source=cdc&company=PT%20Contoh&type=kerja&jd=<deskripsi lowongan, URL-encoded>`. Deskripsi dan nama perusahaan otomatis terisi; `type` boleh `kerja`, `kepanitiaan`, atau `beasiswa`. Teks hanya diisi ke formulir dan parameter dihapus dari alamat setelah terbaca.
+- Alamat CDC bisa diganti lewat `CDC_URL` di `.env` (kosongkan untuk menyembunyikan kartu).
+
 ## 2. Mode presentasi
 - Buka **`/demo`**, tekan tombol **Putar demo**, atau tekan **Shift+D**. Demo menampilkan hasil analisis kecocokan, lalu interview rekaman dua pertanyaan sampai ringkasan, sekitar 90 detik, berjalan sendiri.
 - Tanpa mikrofon, tanpa panggilan AI, tanpa internet setelah halaman termuat. Badge **DEMO · rekaman** tampil supaya transparan bagi juri.

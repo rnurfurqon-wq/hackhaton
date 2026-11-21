@@ -197,6 +197,7 @@ async function loadSample(key) {
   $("#cv-text").hidden = false;
   $("#cv-text").value = S.samples.cv;
   $("#job-text").value = job.text;
+  $("#jd-prefill-note").hidden = true;
   $("#job-file").value = "";
   $("#job-file-name").textContent = "";
   $("#company").value = { cocok: "PT Contoh Analitika Nusantara", tidak_cocok: "PT Contoh Teknologi Finansial", kepanitiaan: "CAKREN" }[key] || "";
@@ -1518,6 +1519,28 @@ async function init() {
     if (m > 0) C.score.finalMultiplier = m; // satu sumber kebenaran: FINAL_MULTIPLIER di server
   } catch (_) { /* tetap jalan; mode demo tidak butuh server */ }
   if (DEMO_URL) startReplay();
+  else applyJobPrefill();
+}
+
+// Lowongan dari luar (misalnya portal CDC kampus) lewat URL:
+//   /?jd=<deskripsi>&company=<nama>&type=kerja|kepanitiaan|beasiswa&source=cdc
+// Nilai hanya diisi sebagai teks ke formulir (tidak dieksekusi), lalu parameter dihapus dari alamat
+// supaya deskripsi tidak tertinggal di riwayat atau terbagi tanpa sengaja.
+function applyJobPrefill() {
+  const jd = (PARAMS.get("jd") || "").trim().slice(0, 12000);
+  if (!jd) return;
+  $("#job-text").value = jd;
+  const company = (PARAMS.get("company") || "").trim().slice(0, 80);
+  if (company) $("#company").value = company;
+  const type = PARAMS.get("type");
+  const radio = ["kerja", "kepanitiaan", "beasiswa"].includes(type) && document.querySelector(`input[name="selection"][value="${type}"]`);
+  if (radio) radio.checked = true;
+  const from = PARAMS.get("source") === "cdc" ? "CDC Cakrawala" : "tautan";
+  const note = $("#jd-prefill-note");
+  note.textContent = `Deskripsi lowongan dari ${from} sudah terisi. Cek dulu, lalu tekan Cek kecocokan.`;
+  note.hidden = false;
+  setSpeech(`Lowongan${company ? ` di ${company}` : ""} sudah saya terima dari ${from}. Sekarang unggah CV kamu dulu, ya.`);
+  try { history.replaceState(null, "", location.pathname); } catch (_) { /* abaikan */ }
 }
 
 init();

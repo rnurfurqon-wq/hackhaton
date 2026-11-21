@@ -715,3 +715,11 @@ body[data-fx="3"] .fx-vignette { opacity: 0.45; }
   #dialog-text { font-size: 17px; }
   .btn-wide { min-width: 0; width: 100%; }
 }
+
+/* Tautan ke portal karier kampus (CDC) di langkah deskripsi posisi */
+.cdc-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 14px; padding: 12px 14px; border: 2px dashed var(--line-strong); border-radius: var(--radius); background: var(--brand-soft); }
+.cdc-card p { margin: 0; }
+.cdc-title { font-weight: 800; color: var(--navy); }
+.cdc-card .btn { white-space: nowrap; text-decoration: none; }
+.note-info { color: var(--brand-ink); background: var(--brand-soft); margin-bottom: 8px; }
+@media (max-width: 560px) { .cdc-card { flex-direction: column; align-items: stretch; text-align: left; } }
