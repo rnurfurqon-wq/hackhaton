@@ -24,6 +24,11 @@
     <div class="progress" role="progressbar" aria-label="Langkah persiapan" aria-valuemin="0" aria-valuemax="4" aria-valuenow="1">
       <span id="setup-progress"></span>
     </div>
+    <span class="user-chip" id="user-chip" hidden>
+      <img id="user-pic" alt="" width="28" height="28" referrerpolicy="no-referrer">
+      <span id="user-name"></span>
+      <button type="button" class="link-btn" id="btn-logout">Keluar</button>
+    </span>
     <span class="brand">
       <!-- Logo: ganti dengan menaruh static/img/logo.png, tidak perlu mengubah file ini. -->
       <img class="brand-logo" src="{{ url_for('static', filename=brand.logo) }}?v={{ brand.logo_v }}" alt="" width="32" height="32">
@@ -37,6 +42,16 @@
       <p class="speech" id="setup-speech" aria-live="polite">Halo! Saya Pak Kumis. Kita latihan interview bareng, yuk. Mulai dari CV kamu.</p>
     </div>
     <p id="mock-note" class="note-pill" hidden>Mode tiruan aktif: jawaban AI berupa contoh tetap.</p>
+
+    <!-- Login Google: hanya tampil kalau GOOGLE_CLIENT_ID diisi di server dan pengguna belum masuk -->
+    <div class="login-card" id="login-box" hidden>
+      <div>
+        <p class="login-title">Masuk dulu, yuk</p>
+        <p class="muted small">Pakai akun Google (Gmail) supaya bisa latihan dengan AI. Tombol <strong>Putar demo</strong> tetap bisa dipakai tanpa masuk.</p>
+        <p class="error small" id="login-error" role="alert"></p>
+      </div>
+      <div id="google-btn"></div>
+    </div>
 
     <!-- Langkah 1: CV -->
     <div class="step" data-step="cv">

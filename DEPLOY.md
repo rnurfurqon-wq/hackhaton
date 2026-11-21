@@ -36,6 +36,21 @@ Tidak ada library baru, jadi `pip install` dan `.env` tidak perlu diubah. Nama f
 3. Klik **Reload** di tab **Web**, lalu buka situsnya dengan **Ctrl+Shift+R** supaya CSS dan JS lama tidak tersimpan di cache browser.
 4. Cek cepat: buka `https://USERNAME.pythonanywhere.com/demo`. Demo harus berjalan sendiri sampai layar "Latihan selesai!".
 
+## Login Google (opsional)
+
+Kalau `GOOGLE_CLIENT_ID` kosong, aplikasi berjalan seperti biasa (memakai kode akses kalau diisi). Mode `/demo` tidak pernah butuh login.
+
+1. Buka Google Cloud Console, pilih atau buat project, lalu buka **APIs & Services > OAuth consent screen**. Pilih **External**, isi nama aplikasi `NgBlu` dan email kamu, lalu simpan. Di bagian **Audience**, klik **Publish app** supaya semua akun Gmail bisa masuk (tanpa ini hanya "test users" yang bisa).
+2. Buka **APIs & Services > Credentials > Create credentials > OAuth client ID**. Pilih **Web application**.
+3. Di **Authorized JavaScript origins**, tambahkan `https://hrdonline.pythonanywhere.com` (tanpa garis miring di akhir). Bagian redirect URI boleh dikosongkan. Klik **Create**, lalu salin **Client ID** (berakhiran `.apps.googleusercontent.com`). Client secret tidak dipakai.
+4. Di Bash console PythonAnywhere, buka `nano ~/hackathongoks/.env` dan tambahkan:
+   ```
+   GOOGLE_CLIENT_ID=<Client ID dari langkah 3>
+   SECRET_KEY=<teks acak panjang>
+   ```
+   Teks acak bisa dibuat dengan `python3 -c "import secrets; print(secrets.token_hex(32))"`. Opsional: `ALLOWED_EMAIL_DOMAINS=cakrawala.ac.id` untuk membatasi ke email kampus.
+5. Klik **Reload**. Di layar pertama muncul tombol **Sign in with Google**. Kode akses tetap berlaku sebagai jalan cadangan (misalnya untuk juri).
+
 ## Mengganti logo
 
 1. Siapkan logo, idealnya PNG persegi dengan latar transparan (minimal 128 x 128 px). Logo lebar juga bisa, tingginya otomatis 32 px.

@@ -63,6 +63,7 @@ async function api(path, { json, form } = {}) {
   try { data = await res.json(); } catch (_) { /* bukan JSON */ }
   if (!res.ok) {
     if (data.need_code) $("#code-box").hidden = false;
+    if (data.need_login) { renderUser(null); $("#login-error").textContent = data.error || ""; }
     throw new Error(data.error || `Server membalas ${res.status}. Coba lagi.`);
   }
   if (data.usage) {
@@ -319,6 +320,7 @@ async function startReplay() {
   S.settings.effect = ["off", "gentle", "full"].includes(fx) ? fx : document.querySelector('input[name="fx"]:checked').value;
 
   $("#mock-note").hidden = true; // tidak relevan untuk sesi rekaman
+  $("#login-box").hidden = true;
   // Babak 1: hasil analisis kecocokan (dari rekaman, tanpa AI) supaya penonton melihat personalisasinya.
   renderMatch(SEED.analysis);
   showStep("match");
@@ -1062,6 +1064,7 @@ function backToSetup(step) {
   stopEverything();
   if (S.replay) { S.replay = false; S.analysis = null; S.plan = null; }
   $("#mock-note").hidden = !(S.config && S.config.mock);
+  if (S.config && S.config.google_client_id) renderUser(S.user);
   X.phase = "idle";
   document.body.dataset.fx = "0";
   document.body.dataset.screen = "setup";
@@ -1431,6 +1434,7 @@ function bind() {
   });
   ["#cv-text", "#job-text"].forEach((s) => $(s).addEventListener("input", updatePrimary));
   $("#btn-mic-test").addEventListener("click", micTest);
+  $("#btn-logout").addEventListener("click", logout);
   $("#access-code").addEventListener("input", (e) => {
     S.code = e.target.value.trim();
     try { localStorage.setItem("ngblu_code", S.code); } catch (_) { /* abaikan */ }
@@ -1515,11 +1519,58 @@ async function init() {
     S.config = await api("/api/config");
     $("#mock-note").hidden = !S.config.mock;
     $("#code-box").hidden = !S.config.need_code;
+    // Mode demo tidak butuh login, jadi skrip Google tidak dimuat sama sekali di /demo.
+    if (S.config.google_client_id) { renderUser(S.config.user); if (!DEMO_URL) setupGoogle(S.config.google_client_id); }
     const m = S.config.score && Number(S.config.score.final_multiplier);
     if (m > 0) C.score.finalMultiplier = m; // satu sumber kebenaran: FINAL_MULTIPLIER di server
   } catch (_) { /* tetap jalan; mode demo tidak butuh server */ }
   if (DEMO_URL) startReplay();
   else applyJobPrefill();
+}
+
+// ============================================================================ login Google (opsional)
+function renderUser(user) {
+  S.user = user || null;
+  const enabled = Boolean(S.config && S.config.google_client_id);
+  $("#login-box").hidden = !enabled || Boolean(S.user);
+  $("#user-chip").hidden = !S.user;
+  if (!S.user) return;
+  $("#login-error").textContent = "";
+  $("#user-name").textContent = S.user.name;
+  $("#user-pic").src = S.user.picture || "";
+}
+
+function setupGoogle(clientId) {
+  const s = document.createElement("script");
+  s.src = "https://accounts.google.com/gsi/client";
+  s.async = true;
+  s.onload = () => {
+    try {
+      google.accounts.id.initialize({ client_id: clientId, callback: onGoogleCredential, ux_mode: "popup", auto_select: false });
+      google.accounts.id.renderButton($("#google-btn"), { theme: "outline", size: "large", shape: "pill", text: "signin_with", locale: "id" });
+    } catch (_) { $("#login-error").textContent = "Tombol Google gagal dimuat. Muat ulang halaman."; }
+  };
+  s.onerror = () => { $("#login-error").textContent = "Tidak bisa memuat login Google. Cek koneksi, atau pakai Putar demo."; };
+  document.head.append(s);
+}
+
+async function onGoogleCredential(resp) {
+  $("#login-error").textContent = "Memverifikasi akun...";
+  try {
+    const data = await api("/api/auth/google", { json: { credential: resp.credential } });
+    renderUser(data.user);
+    const name = data.user.given_name || data.user.name.split(" ")[0];
+    setSpeech(`Halo, ${name}! Senang ketemu kamu. Yuk mulai dari CV kamu.`);
+    setCat("positive");
+  } catch (err) {
+    $("#login-error").textContent = err.message;
+  }
+}
+
+async function logout() {
+  try { await api("/api/auth/logout", { json: {} }); } catch (_) { /* tetap keluar di tampilan */ }
+  try { google.accounts.id.disableAutoSelect(); } catch (_) { /* abaikan */ }
+  renderUser(null);
 }
 
 // Lowongan dari luar (misalnya portal CDC kampus) lewat URL:

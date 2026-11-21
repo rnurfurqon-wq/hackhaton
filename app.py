@@ -8,11 +8,17 @@ Jalankan lokal tanpa API key (mode tiruan):
     MOCK_LLM=1 python app.py
 """
 
+import json
 import os
+import secrets
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from functools import wraps
 from pathlib import Path
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 
 BASE_DIR = Path(__file__).resolve().parent
 try:
@@ -31,6 +37,21 @@ app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5 MB per upload
 
 ACCESS_CODE = os.getenv("ACCESS_CODE", "").strip()
+
+# ---------------------------------------------------------------------------
+# Login Google (opsional). Aktif hanya kalau GOOGLE_CLIENT_ID diisi di .env.
+# Kosong = aplikasi berjalan seperti sebelumnya. Mode /demo tidak pernah butuh login.
+# ---------------------------------------------------------------------------
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "").strip()
+# Contoh: "cakrawala.ac.id,student.cakrawala.ac.id". Kosong = semua akun Google boleh.
+ALLOWED_EMAIL_DOMAINS = {d.strip().lower().lstrip("@") for d in os.getenv("ALLOWED_EMAIL_DOMAINS", "").split(",") if d.strip()}
+GOOGLE_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo"
+GOOGLE_ISSUERS = ("accounts.google.com", "https://accounts.google.com")
+
+app.secret_key = os.getenv("SECRET_KEY", "").strip() or secrets.token_hex(32)  # tanpa SECRET_KEY, login hilang saat Reload
+app.config.update(SESSION_COOKIE_SAMESITE="Lax", SESSION_COOKIE_HTTPONLY=True,
+                  SESSION_COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE", "1") == "1",
+                  PERMANENT_SESSION_LIFETIME=7 * 24 * 3600)
 SELECTION_TYPES = ("kerja", "kepanitiaan", "beasiswa")
 
 # ---------------------------------------------------------------------------
@@ -74,13 +95,44 @@ def to_int(value, default: int) -> int:
 # ---------------------------------------------------------------------------
 # Pengaman: kode akses opsional, supaya link publik tidak menghabiskan saldo API
 # ---------------------------------------------------------------------------
+def current_user() -> dict | None:
+    user = session.get("user")
+    return user if GOOGLE_CLIENT_ID and isinstance(user, dict) else None
+
+
 def require_access(fn):
+    """Akses API AI: lolos kalau sudah login Google ATAU kode akses benar (yang mana pun yang aktif)."""
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        if ACCESS_CODE and request.headers.get("X-Access-Code", "") != ACCESS_CODE:
+        if current_user():
+            return fn(*args, **kwargs)
+        code_ok = bool(ACCESS_CODE) and request.headers.get("X-Access-Code", "") == ACCESS_CODE
+        if GOOGLE_CLIENT_ID and not code_ok:
+            return jsonify({"error": "Masuk dengan akun Google dulu untuk memakai AI.", "need_login": True}), 401
+        if ACCESS_CODE and not code_ok and not GOOGLE_CLIENT_ID:
             return jsonify({"error": "Kode akses salah atau belum diisi.", "need_code": True}), 401
         return fn(*args, **kwargs)
     return wrapper
+
+
+def verify_google_token(credential: str) -> dict:
+    """Verifikasi ID token Google lewat endpoint tokeninfo resmi (tanpa library tambahan).
+    Melempar ValueError dengan pesan ramah kalau token tidak sah."""
+    url = GOOGLE_TOKENINFO_URL + "?" + urllib.parse.urlencode({"id_token": credential})
+    try:
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            info = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError:
+        raise ValueError("Token Google tidak sah atau sudah kedaluwarsa. Coba masuk lagi.")
+    if info.get("aud") != GOOGLE_CLIENT_ID:
+        raise ValueError("Token Google bukan untuk aplikasi ini.")
+    if info.get("iss") not in GOOGLE_ISSUERS:
+        raise ValueError("Penerbit token tidak dikenal.")
+    if int(info.get("exp", 0)) < time.time():
+        raise ValueError("Sesi Google sudah kedaluwarsa. Coba masuk lagi.")
+    if str(info.get("email_verified")).lower() != "true":
+        raise ValueError("Email Google belum terverifikasi.")
+    return info
 
 
 def error(message: str, status: int = 400):
@@ -115,13 +167,47 @@ def demo():
 @app.get("/api/config")
 def config():
     return jsonify({
-        "need_code": bool(ACCESS_CODE),
+        "need_code": bool(ACCESS_CODE) and not GOOGLE_CLIENT_ID,
+        "google_client_id": GOOGLE_CLIENT_ID or None,
+        "user": current_user(),
         "mock": is_mock(),
         "models": {"main": MODEL_MAIN, "fast": MODEL_FAST},
         "demo": {"slots": DEMO_CONFIG["slots"], "max_followups": DEMO_CONFIG["max_followups"]},
         "score": {"final_multiplier": FINAL_MULTIPLIER},
         "app_name": APP_NAME,
     })
+
+
+@app.post("/api/auth/google")
+def auth_google():
+    if not GOOGLE_CLIENT_ID:
+        return error("Login Google belum diaktifkan.", 404)
+    body = request.get_json(silent=True) or {}
+    credential = body.get("credential") if isinstance(body, dict) else None
+    if not isinstance(credential, str) or not credential or len(credential) > 4096:
+        return error("Data login tidak valid.")
+    try:
+        info = verify_google_token(credential)
+    except ValueError as exc:
+        return error(str(exc), 401)
+    except Exception:
+        app.logger.exception("verifikasi Google gagal")
+        return error("Tidak bisa menghubungi Google untuk verifikasi. Coba lagi sebentar.", 502)
+    email = str(info.get("email", "")).lower()
+    if ALLOWED_EMAIL_DOMAINS and email.rsplit("@", 1)[-1] not in ALLOWED_EMAIL_DOMAINS:
+        return error("Akun ini tidak diizinkan. Gunakan email kampus.", 403)
+    session.clear()
+    session.permanent = True
+    session["user"] = {"name": str(info.get("name") or email.split("@")[0])[:80],
+                       "given_name": str(info.get("given_name") or "")[:40],
+                       "email": email[:120], "picture": str(info.get("picture") or "")[:300]}
+    return jsonify({"user": session["user"]})
+
+
+@app.post("/api/auth/logout")
+def auth_logout():
+    session.clear()
+    return jsonify({"ok": True})
 
 
 @app.get("/api/samples")

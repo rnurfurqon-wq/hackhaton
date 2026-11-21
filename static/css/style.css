@@ -723,3 +723,16 @@ body[data-fx="3"] .fx-vignette { opacity: 0.45; }
 .cdc-card .btn { white-space: nowrap; text-decoration: none; }
 .note-info { color: var(--brand-ink); background: var(--brand-soft); margin-bottom: 8px; }
 @media (max-width: 560px) { .cdc-card { flex-direction: column; align-items: stretch; text-align: left; } }
+
+/* Login Google */
+.login-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 0 0 18px; padding: 14px 16px; border: 2px solid var(--brand); border-radius: var(--radius); background: var(--brand-soft); }
+.login-card p { margin: 0; }
+.login-title { font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--navy); }
+.login-card .error:empty { display: none; }
+#google-btn { min-height: 44px; flex: none; }
+.user-chip { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--navy); white-space: nowrap; max-width: 260px; }
+.user-chip[hidden] { display: none; }
+.user-chip img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--brand-soft); }
+.user-chip img[src=""] { display: none; }
+#user-name { overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 560px) { .login-card { flex-direction: column; align-items: stretch; } #user-name { display: none; } }

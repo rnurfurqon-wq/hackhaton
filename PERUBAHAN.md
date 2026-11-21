@@ -17,6 +17,13 @@ Versi ini menggantikan zip "Cermin + Pak Kumis". Nama folder tetap `hackathongok
 - **Tautan masuk dari CDC (siap dipakai kelak):** `https://USERNAME.pythonanywhere.com/?source=cdc&company=PT%20Contoh&type=kerja&jd=<deskripsi lowongan, URL-encoded>`. Deskripsi dan nama perusahaan otomatis terisi; `type` boleh `kerja`, `kepanitiaan`, atau `beasiswa`. Teks hanya diisi ke formulir dan parameter dihapus dari alamat setelah terbaca.
 - Alamat CDC bisa diganti lewat `CDC_URL` di `.env` (kosongkan untuk menyembunyikan kartu).
 
+### Login Google (update keempat)
+- Tombol **Sign in with Google** di layar pertama. Token diverifikasi di server (audiens, penerbit, masa berlaku, email terverifikasi), lalu disimpan sebagai cookie sesi bertanda tangan. Tidak ada password yang disimpan.
+- Aktif hanya kalau `GOOGLE_CLIENT_ID` dan `SECRET_KEY` diisi di `.env` (langkah di `DEPLOY.md`). Kalau kosong, aplikasi berjalan persis seperti sebelumnya.
+- Sudah login = boleh memakai AI. Kode akses tetap bisa dipakai sebagai cadangan. `/demo` tidak pernah butuh login dan tidak memuat skrip Google.
+- Opsi `ALLOWED_EMAIL_DOMAINS` untuk membatasi ke email kampus. Nama pengguna tampil di header, dengan tombol Keluar, dan Pak Kumis menyapa dengan nama depan.
+- Diuji lewat `tests/test_auth.py` (verifikasi Google ditiru): token salah audiens, kedaluwarsa, email belum terverifikasi, domain tidak diizinkan, login, logout, dan kode akses.
+
 ## 2. Mode presentasi
 - Buka **`/demo`**, tekan tombol **Putar demo**, atau tekan **Shift+D**. Demo menampilkan hasil analisis kecocokan, lalu interview rekaman dua pertanyaan sampai ringkasan, sekitar 90 detik, berjalan sendiri.
 - Tanpa mikrofon, tanpa panggilan AI, tanpa internet setelah halaman termuat. Badge **DEMO · rekaman** tampil supaya transparan bagi juri.

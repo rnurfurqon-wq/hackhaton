@@ -43,6 +43,7 @@ tests/analysis.test.js  unit test heuristik, komposur, skor
 pip install -r requirements.txt
 MOCK_LLM=1 python app.py          # http://127.0.0.1:5000 tanpa API key
 node --test tests/analysis.test.js
+python tests/test_auth.py         # login Google (opsional, GOOGLE_CLIENT_ID)
 python check_setup.py             # cek API key dan model sebelum deploy
 ```
 
