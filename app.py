@@ -157,6 +157,19 @@ def index():
     return render_template("index.html")
 
 
+SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "").strip()
+
+
+@app.get("/privacy")
+def privacy():
+    return render_template("legal.html", page="privacy", title="Kebijakan Privasi", support_email=SUPPORT_EMAIL)
+
+
+@app.get("/terms")
+def terms():
+    return render_template("legal.html", page="terms", title="Ketentuan Layanan", support_email=SUPPORT_EMAIL)
+
+
 @app.get("/demo")
 def demo():
     """Pintasan mode presentasi: /demo sama dengan /?demo=1 (parameter lain ikut diteruskan)."""

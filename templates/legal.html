@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} · {{ brand.name }}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename=brand.favicon) }}?v={{ brand.logo_v }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fonts.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="legal-page">
+<main class="legal">
+  <a class="brand legal-brand" href="{{ url_for('index') }}">
+    <img class="brand-logo" src="{{ url_for('static', filename=brand.logo) }}?v={{ brand.logo_v }}" alt="" width="40" height="40">
+    <span class="brand-name">{{ brand.name }}</span>
+  </a>
+  <h1>{{ title }}</h1>
+  <p class="muted small">Berlaku sejak 21 November 2026.</p>
+
+  {% if page == "privacy" %}
+  <p>{{ brand.name }} adalah aplikasi latihan interview untuk mahasiswa. Halaman ini menjelaskan data apa yang kami proses dan bagaimana kami menanganinya.</p>
+  <h2>Data yang diproses</h2>
+  <ul>
+    <li><strong>Akun Google (jika kamu masuk):</strong> nama, alamat email, dan foto profil. Dipakai hanya untuk menampilkan namamu dan membatasi pemakaian AI bagi pengguna yang masuk. Kami tidak menerima password Google kamu.</li>
+    <li><strong>CV dan deskripsi posisi:</strong> teks yang kamu unggah atau tempel, untuk menganalisis kecocokan dan menyusun pertanyaan.</li>
+    <li><strong>Jawaban interview:</strong> teks hasil pengenalan suara atau ketikan, untuk memberi umpan balik dan ringkasan.</li>
+  </ul>
+  <h2>Yang tidak kami lakukan</h2>
+  <ul>
+    <li>Kami <strong>tidak menyimpan</strong> CV, deskripsi posisi, transkrip, maupun jawabanmu di server atau database. Data hanya diproses selama permintaan berlangsung, lalu dibuang. Satu-satunya pengecualian: hasil penyusunan pertanyaan terakhir pada mode latihan "2 pertanyaan (Demo)" disimpan sebagai cadangan presentasi dan tertimpa oleh sesi demo berikutnya.</li>
+    <li>Kami tidak merekam atau menyimpan audio. Pengenalan suara berjalan lewat fitur browser (Web Speech API).</li>
+    <li>Kami tidak menjual data dan tidak memakainya untuk iklan.</li>
+    <li>Kami tidak menilai aksen, pelafalan, agama, usia, suku, atau penampilan.</li>
+  </ul>
+  <h2>Pihak ketiga</h2>
+  <ul>
+    <li><strong>Anthropic (Claude API):</strong> teks CV, posisi, dan jawaban dikirim ke Claude API untuk dianalisis. Penggunaan data oleh Anthropic mengikuti kebijakan API komersial mereka.</li>
+    <li><strong>Google:</strong> untuk login (Google Identity Services) dan, di browser Chrome, untuk pengenalan suara.</li>
+    <li><strong>PythonAnywhere:</strong> tempat aplikasi di-hosting.</li>
+  </ul>
+  <h2>Cookie dan penyimpanan</h2>
+  <p>Kami memakai satu cookie sesi bertanda tangan untuk mengingat bahwa kamu sudah masuk (berlaku 7 hari, hapus dengan tombol Keluar). Browsermu juga menyimpan preferensi kecil seperti kode akses dan status penjelasan efek.</p>
+  {% else %}
+  <h2>Layanan</h2>
+  <p>{{ brand.name }} menyediakan latihan interview dengan umpan balik berbasis AI. Layanan ini untuk latihan dan bukan penilaian resmi rekrutmen. Hasil, skor, dan saran bisa keliru, jadi gunakan sebagai bahan refleksi.</p>
+  <h2>Penggunaan yang wajar</h2>
+  <ul>
+    <li>Unggah hanya dokumen milikmu atau yang boleh kamu gunakan.</li>
+    <li>Jangan memasukkan data sensitif yang tidak diperlukan (misalnya nomor identitas atau data rekening).</li>
+    <li>Jangan menyalahgunakan layanan, misalnya mengirim permintaan otomatis dalam jumlah besar.</li>
+  </ul>
+  <h2>Ketersediaan</h2>
+  <p>Layanan dibuat untuk kompetisi CAKREN HACKSPACE dan disediakan apa adanya. Fitur dapat berubah atau dihentikan sewaktu-waktu.</p>
+  <h2>Privasi</h2>
+  <p>Cara kami memproses data dijelaskan di <a href="{{ url_for('privacy') }}">Kebijakan Privasi</a>.</p>
+  {% endif %}
+
+  <h2>Kontak</h2>
+  <p>{% if support_email %}Pertanyaan atau permintaan penghapusan data: <a href="mailto:{{ support_email }}">{{ support_email }}</a>.{% else %}Pertanyaan dapat disampaikan kepada tim pengembang {{ brand.name }}.{% endif %}</p>
+
+  <p class="legal-links"><a href="{{ url_for('index') }}">Kembali ke {{ brand.name }}</a> · <a href="{{ url_for('privacy') }}">Privasi</a> · <a href="{{ url_for('terms') }}">Ketentuan</a></p>
+</main>
+</body>
+</html>

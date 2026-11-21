@@ -736,3 +736,13 @@ body[data-fx="3"] .fx-vignette { opacity: 0.45; }
 .user-chip img[src=""] { display: none; }
 #user-name { overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 560px) { .login-card { flex-direction: column; align-items: stretch; } #user-name { display: none; } }
+
+/* Halaman privasi dan ketentuan */
+.legal-links { margin-top: 28px; text-align: center; font-size: 13px; color: var(--muted); }
+.legal-links a { color: var(--blue-lip); font-weight: 700; text-decoration: none; }
+.legal-page { height: auto; }
+.legal { max-width: 720px; margin: 0 auto; padding: 28px 20px 48px; }
+.legal-brand { text-decoration: none; margin-bottom: 18px; }
+.legal h1 { font-size: 28px; color: var(--navy); }
+.legal h2 { margin-top: 22px; color: var(--navy); }
+.legal li { margin-bottom: 6px; }

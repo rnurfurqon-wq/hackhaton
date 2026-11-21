@@ -24,6 +24,10 @@ Versi ini menggantikan zip "Cermin + Pak Kumis". Nama folder tetap `hackathongok
 - Opsi `ALLOWED_EMAIL_DOMAINS` untuk membatasi ke email kampus. Nama pengguna tampil di header, dengan tombol Keluar, dan Pak Kumis menyapa dengan nama depan.
 - Diuji lewat `tests/test_auth.py` (verifikasi Google ditiru): token salah audiens, kedaluwarsa, email belum terverifikasi, domain tidak diizinkan, login, logout, dan kode akses.
 
+### Halaman Privasi dan Ketentuan (update kelima)
+- `/privacy` dan `/terms` dalam Bahasa Indonesia, ditautkan di bagian bawah layar persiapan. Dipakai untuk mengisi branding OAuth Google saat publish.
+- Email kontak diambil dari `SUPPORT_EMAIL` di `.env`. Kalau kosong, tampil teks kontak umum.
+
 ## 2. Mode presentasi
 - Buka **`/demo`**, tekan tombol **Putar demo**, atau tekan **Shift+D**. Demo menampilkan hasil analisis kecocokan, lalu interview rekaman dua pertanyaan sampai ringkasan, sekitar 90 detik, berjalan sendiri.
 - Tanpa mikrofon, tanpa panggilan AI, tanpa internet setelah halaman termuat. Badge **DEMO · rekaman** tampil supaya transparan bagi juri.
