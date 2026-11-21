@@ -113,7 +113,10 @@
             <p class="cdc-title">Belum punya lowongan?</p>
             <p class="muted small">Cari di {{ cdc.name }} (login dengan akun kampusmu di sana), salin deskripsi lowongannya, lalu tempel di kotak atas.</p>
           </div>
-          <a class="btn" id="cdc-link" href="{{ cdc.url }}" target="_blank" rel="noopener noreferrer">Buka {{ cdc.name }} ↗</a>
+          <div class="cdc-actions">
+            <button type="button" class="btn btn-primary" id="cdc-open-panel">Lihat {{ cdc.name }} di sini</button>
+            <a class="btn" id="cdc-link" href="{{ cdc.url }}" target="_blank" rel="noopener noreferrer">Tab baru ↗</a>
+          </div>
         </div>
         {% endif %}
       </div>
@@ -303,6 +306,35 @@
     <button type="button" class="btn btn-primary btn-wide" id="explainer-ok">Mengerti</button>
   </div>
 </div>
+
+{% if cdc.url %}
+<!-- Panel CDC: situs CDC tampil apa adanya di iframe (login dilakukan pengguna sendiri di sana),
+     kotak tempel lowongan tetap terlihat di sampingnya. NgBlu tidak membaca isi iframe. -->
+<div class="modal cdc-modal" id="cdc-panel" hidden>
+  <div class="modal-card cdc-panel-card" role="dialog" aria-modal="true" aria-labelledby="cdc-panel-title">
+    <div class="cdc-panel-head">
+      <h2 id="cdc-panel-title">{{ cdc.name }}</h2>
+      <a class="link-btn" href="{{ cdc.url }}" target="_blank" rel="noopener noreferrer">Buka di tab baru ↗</a>
+      <button type="button" class="icon-btn" id="cdc-close" aria-label="Tutup panel CDC">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="cdc-panel-body">
+      <div class="cdc-frame-wrap">
+        <iframe id="cdc-frame" title="{{ cdc.name }}" data-src="{{ cdc.url }}" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p class="muted small cdc-frame-note">Halaman kosong atau menolak ditampilkan? Situs CDC mungkin tidak mengizinkan dibuka di dalam aplikasi lain. Pakai <a href="{{ cdc.url }}" target="_blank" rel="noopener noreferrer">Buka di tab baru ↗</a>, lalu salin lowongannya ke kotak di samping.</p>
+      </div>
+      <div class="cdc-paste">
+        <label for="cdc-jd">Tempel deskripsi lowongan dari CDC</label>
+        <textarea id="cdc-jd" rows="10" placeholder="Login di CDC, buka lowongan, salin teksnya, lalu tempel di sini"></textarea>
+        <label for="cdc-company">Nama perusahaan</label>
+        <input id="cdc-company" type="text" maxlength="80" placeholder="Contoh: PT Maju Bersama">
+        <button type="button" class="btn btn-primary btn-wide" id="cdc-use">Pakai lowongan ini</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <div class="modal" id="confirm-exit" hidden>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="exit-title">

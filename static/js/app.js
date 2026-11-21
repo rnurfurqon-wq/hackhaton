@@ -1435,6 +1435,11 @@ function bind() {
   ["#cv-text", "#job-text"].forEach((s) => $(s).addEventListener("input", updatePrimary));
   $("#btn-mic-test").addEventListener("click", micTest);
   $("#btn-logout").addEventListener("click", logout);
+  if ($("#cdc-panel")) {
+    $("#cdc-open-panel").addEventListener("click", openCdcPanel);
+    $("#cdc-close").addEventListener("click", () => { $("#cdc-panel").hidden = true; });
+    $("#cdc-use").addEventListener("click", useCdcJob);
+  }
   $("#access-code").addEventListener("input", (e) => {
     S.code = e.target.value.trim();
     try { localStorage.setItem("ngblu_code", S.code); } catch (_) { /* abaikan */ }
@@ -1505,6 +1510,7 @@ function bind() {
     if (e.key !== "Escape") return;
     if (!$("#sugg-card").hidden) closeCard();
     else if (!$("#confirm-exit").hidden) $("#confirm-exit").hidden = true;
+    else if ($("#cdc-panel") && !$("#cdc-panel").hidden) $("#cdc-panel").hidden = true;
   });
   window.addEventListener("resize", () => { if (document.body.dataset.screen === "interview") renderRight(); });
 }
@@ -1571,6 +1577,30 @@ async function logout() {
   try { await api("/api/auth/logout", { json: {} }); } catch (_) { /* tetap keluar di tampilan */ }
   try { google.accounts.id.disableAutoSelect(); } catch (_) { /* abaikan */ }
   renderUser(null);
+}
+
+// ============================================================================ panel CDC (iframe, tanpa scraping)
+function openCdcPanel() {
+  const frame = $("#cdc-frame");
+  if (!frame.src) frame.src = frame.dataset.src; // dimuat saat pertama dibuka saja
+  $("#cdc-jd").value = $("#job-text").value;
+  $("#cdc-company").value = $("#company").value;
+  $("#cdc-panel").hidden = false;
+}
+
+function useCdcJob() {
+  const jd = $("#cdc-jd").value.trim();
+  if (!jd) { $("#cdc-jd").focus(); return; }
+  $("#job-text").value = jd;
+  $("#job-file").value = "";
+  $("#job-file-name").textContent = "";
+  const company = $("#cdc-company").value.trim();
+  if (company) $("#company").value = company;
+  $("#cdc-panel").hidden = true;
+  const note = $("#jd-prefill-note");
+  note.textContent = "Deskripsi lowongan dari CDC Cakrawala sudah terisi. Cek dulu, lalu tekan Cek kecocokan.";
+  note.hidden = false;
+  updatePrimary();
 }
 
 // Lowongan dari luar (misalnya portal CDC kampus) lewat URL:

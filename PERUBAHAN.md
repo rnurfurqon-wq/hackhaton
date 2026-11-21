@@ -28,6 +28,11 @@ Versi ini menggantikan zip "Cermin + Pak Kumis". Nama folder tetap `hackathongok
 - `/privacy` dan `/terms` dalam Bahasa Indonesia, ditautkan di bagian bawah layar persiapan. Dipakai untuk mengisi branding OAuth Google saat publish.
 - Email kontak diambil dari `SUPPORT_EMAIL` di `.env`. Kalau kosong, tampil teks kontak umum.
 
+### Panel CDC di dalam NgBlu (update keenam)
+- Tombol **Lihat CDC Cakrawala di sini** di langkah deskripsi posisi membuka panel besar: situs CDC tampil di kiri (iframe), kotak tempel lowongan dan nama perusahaan di kanan, lalu **Pakai lowongan ini** mengisi formulir.
+- Login CDC dilakukan pengguna sendiri di dalam panel. NgBlu tidak membaca isi panel, tidak scraping, dan tidak menyimpan kredensial.
+- Kalau CDC melarang ditampilkan di aplikasi lain (header X-Frame-Options/CSP), panel tampak kosong atau menolak. Tautan **Buka di tab baru** selalu tersedia sebagai cadangan.
+
 ## 2. Mode presentasi
 - Buka **`/demo`**, tekan tombol **Putar demo**, atau tekan **Shift+D**. Demo menampilkan hasil analisis kecocokan, lalu interview rekaman dua pertanyaan sampai ringkasan, sekitar 90 detik, berjalan sendiri.
 - Tanpa mikrofon, tanpa panggilan AI, tanpa internet setelah halaman termuat. Badge **DEMO · rekaman** tampil supaya transparan bagi juri.

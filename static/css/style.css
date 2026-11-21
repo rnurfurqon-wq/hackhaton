@@ -746,3 +746,17 @@ body[data-fx="3"] .fx-vignette { opacity: 0.45; }
 .legal h1 { font-size: 28px; color: var(--navy); }
 .legal h2 { margin-top: 22px; color: var(--navy); }
 .legal li { margin-bottom: 6px; }
+
+/* Panel CDC di dalam NgBlu */
+.cdc-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.cdc-panel-card { width: min(1200px, 96vw); max-width: none; height: min(820px, 92vh); display: flex; flex-direction: column; padding: 14px 16px; }
+.cdc-panel-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.cdc-panel-head h2 { margin: 0; flex: 1; color: var(--navy); }
+.cdc-panel-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 340px; gap: 14px; }
+.cdc-frame-wrap { display: flex; flex-direction: column; min-height: 0; }
+#cdc-frame { flex: 1; width: 100%; min-height: 300px; border: 2px solid var(--line); border-radius: 12px; background: var(--soft); }
+.cdc-frame-note { margin: 6px 0 0; }
+.cdc-paste { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+.cdc-paste label { font-weight: 700; font-size: 14px; }
+.cdc-paste textarea { flex: 1; min-height: 160px; }
+@media (max-width: 860px) { .cdc-panel-body { grid-template-columns: 1fr; grid-template-rows: 1fr auto; } .cdc-paste textarea { min-height: 100px; } }
