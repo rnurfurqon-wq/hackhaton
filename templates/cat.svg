@@ -1,0 +1,167 @@
+<svg id="cat" class="cat state-idle" viewBox="0 0 240 230" role="img" aria-labelledby="cat-title" focusable="false">
+  <title id="cat-title">Pak Kumis, kucing pewawancara HRD</title>
+  <defs>
+    <clipPath id="pk-head-clip"><ellipse cx="120" cy="92" rx="66.5" ry="56.5"/></clipPath>
+  </defs>
+
+  <!-- Badan: jas navy, kemeja putih, lanyard, ID card HRD -->
+  <g class="torso" stroke="#2A2226" stroke-width="3" stroke-linejoin="round">
+    <path d="M46 232 L54 184 Q60 158 92 149 L148 149 Q180 158 186 184 L194 232 Z" fill="#2D3E66"/>
+    <path d="M98 150 L142 150 L134 206 L106 206 Z" fill="#FFFFFF"/>
+    <path d="M97 151 L114 206 L98 206 L82 168 Z" fill="#24335A"/>
+    <path d="M143 151 L126 206 L142 206 L158 168 Z" fill="#24335A"/>
+    <path d="M104 150 L120 163 L109 170 Z" fill="#FFFFFF"/>
+    <path d="M136 150 L120 163 L131 170 Z" fill="#FFFFFF"/>
+  </g>
+  <g class="lanyard" fill="none" stroke-width="3" stroke-linecap="round">
+    <path d="M110 160 L119 176" stroke="#D94A4A"/>
+    <path d="M130 160 L121 176" stroke="#3B6FB6"/>
+  </g>
+  <g class="badge">
+    <rect x="104" y="175" width="32" height="20" rx="3" fill="#FFFFFF" stroke="#2A2226" stroke-width="2.5"/>
+    <rect x="117" y="171" width="6" height="6" rx="1.5" fill="#3B6FB6" stroke="#2A2226" stroke-width="1.5"/>
+    <text x="120" y="189" text-anchor="middle" font-size="9.5" font-weight="800" fill="#2A2226" font-family="Nunito, Arial, sans-serif">HRD</text>
+  </g>
+
+  <!-- Kepala -->
+  <g class="head">
+    <g class="ear ear-l" stroke="#2A2226" stroke-width="3.5" stroke-linejoin="round">
+      <path d="M58 80 L66 20 L106 46 Z" fill="#9A9289"/>
+      <path d="M68 66 L72 34 L96 49 Z" fill="#E9897F" stroke="none"/>
+      <path d="M70 62 Q76 54 74 46 M76 64 Q82 56 82 50" fill="none" stroke="#F4ECDD" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+    <g class="ear ear-r" stroke="#2A2226" stroke-width="3.5" stroke-linejoin="round">
+      <path d="M182 80 L174 20 L134 46 Z" fill="#9A9289"/>
+      <path d="M172 66 L168 34 L144 49 Z" fill="#E9897F" stroke="none"/>
+      <path d="M170 62 Q164 54 166 46 M164 64 Q158 56 158 50" fill="none" stroke="#F4ECDD" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+
+    <ellipse cx="120" cy="92" rx="68" ry="58" fill="#9A9289"/>
+    <ellipse cx="120" cy="140" rx="66" ry="36" fill="#F1E8D6" clip-path="url(#pk-head-clip)"/>
+    <g fill="none" stroke="#5E5853" stroke-linecap="round">
+      <path d="M111 37 Q113 50 115 60" stroke-width="6"/>
+      <path d="M120 35 L120 62" stroke-width="6"/>
+      <path d="M129 37 Q127 50 125 60" stroke-width="6"/>
+      <path d="M55 92 Q63 94 71 97" stroke-width="4.5"/>
+      <path d="M57 104 Q64 106 70 108" stroke-width="4.5"/>
+      <path d="M185 92 Q177 94 169 97" stroke-width="4.5"/>
+      <path d="M183 104 Q176 106 170 108" stroke-width="4.5"/>
+    </g>
+    <ellipse cx="120" cy="92" rx="68" ry="58" fill="none" stroke="#2A2226" stroke-width="3.5"/>
+
+    <!-- Mata besar berkilau -->
+    <g class="eyes-open">
+      <circle cx="96" cy="94" r="16" fill="#FFFFFF" stroke="#2A2226" stroke-width="3"/>
+      <circle cx="144" cy="94" r="16" fill="#FFFFFF" stroke="#2A2226" stroke-width="3"/>
+      <g class="pupils">
+        <circle cx="97" cy="95" r="11" fill="#2A2226"/>
+        <circle cx="145" cy="95" r="11" fill="#2A2226"/>
+        <circle cx="101.5" cy="90" r="4.5" fill="#FFFFFF"/>
+        <circle cx="149.5" cy="90" r="4.5" fill="#FFFFFF"/>
+        <circle cx="93" cy="99.5" r="2" fill="#FFFFFF"/>
+        <circle cx="141" cy="99.5" r="2" fill="#FFFFFF"/>
+      </g>
+      <circle class="lid" cx="96" cy="94" r="17.6" fill="#9A9289"/>
+      <circle class="lid" cx="144" cy="94" r="17.6" fill="#9A9289"/>
+    </g>
+
+    <g class="brows" fill="none" stroke="#2A2226" stroke-width="3.5" stroke-linecap="round">
+      <path class="brow brow-l" d="M83 70 Q94 64 105 69"/>
+      <path class="brow brow-r" d="M135 69 Q146 64 157 70"/>
+    </g>
+
+    <ellipse class="blush" cx="80" cy="120" rx="10" ry="5.5" fill="#F29C9C"/>
+    <ellipse class="blush" cx="160" cy="120" rx="10" ry="5.5" fill="#F29C9C"/>
+
+    <path d="M114 112 Q120 108 126 112 Q122 119 120 119.5 Q118 119 114 112 Z" fill="#E07A7F" stroke="#2A2226" stroke-width="2" stroke-linejoin="round"/>
+
+    <!-- Mulut untuk tiap ekspresi -->
+    <path class="mouth-closed" d="M112 122 Q116 127.5 120 122.5 Q124 127.5 128 122" fill="none" stroke="#2A2226" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse class="mouth-open" cx="120" cy="127" rx="6.5" ry="6" fill="#7A2E3A" stroke="#2A2226" stroke-width="2"/>
+    <g class="mouth-happy" stroke="#2A2226" stroke-width="2.5" stroke-linejoin="round">
+      <path d="M105 121 Q120 148 135 121 Q120 127 105 121 Z" fill="#B8434F"/>
+      <path d="M112 133 Q120 127 128 133 Q120 142 112 133 Z" fill="#F08A8A" stroke="none"/>
+    </g>
+    <path class="mouth-flat" d="M114 128 Q120 122.5 126 128" fill="none" stroke="#2A2226" stroke-width="2.5" stroke-linecap="round"/>
+    <path class="mouth-frown" d="M112 130 Q120 123 128 130" fill="none" stroke="#2A2226" stroke-width="2.5" stroke-linecap="round"/>
+    <path class="mouth-wavy" d="M106 127 q3.5 -4 7 0 t7 0 t7 0 t7 0" fill="none" stroke="#2A2226" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g stroke="#2A2226" stroke-width="1.8" stroke-linecap="round">
+      <path d="M68 114 L34 108"/>
+      <path d="M68 121 L32 125"/>
+      <path d="M172 114 L206 108"/>
+      <path d="M172 121 L208 125"/>
+    </g>
+
+    <!-- Tetes keringat (khawatir) -->
+    <g class="sweat" fill="#8ED0F5" stroke="#3B8FC9" stroke-width="2" stroke-linejoin="round">
+      <path d="M172 60 Q165 71 172 77 Q179 71 172 60 Z"/>
+      <path d="M194 40 Q185 54 194 62 Q203 54 194 40 Z"/>
+    </g>
+  </g>
+
+  <!-- Meja -->
+  <g class="desk">
+    <rect x="0" y="198" width="240" height="32" fill="#22464F"/>
+    <rect x="0" y="198" width="240" height="3" fill="#2F5A64"/>
+  </g>
+
+  <!-- Tangan di meja (bawaan) -->
+  <g class="paws" fill="#F1E8D6" stroke="#2A2226" stroke-width="3">
+    <ellipse class="paw-l" cx="90" cy="201" rx="16" ry="9.5"/>
+    <ellipse class="paw-r" cx="150" cy="201" rx="16" ry="9.5"/>
+  </g>
+
+  <!-- Tangan di dagu (berpikir, skeptis) -->
+  <g class="arm-chin" stroke="#2A2226" stroke-width="3" stroke-linejoin="round">
+    <path d="M176 206 C176 184 160 166 140 157 L128 170 C144 178 154 190 152 206 Z" fill="#2D3E66"/>
+    <path d="M141 156 L130 169" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="127" cy="153" rx="13" ry="11" fill="#F1E8D6"/>
+    <path d="M118 151 Q124 146 131 149 M120 157 Q126 153 133 155" fill="none" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Kedua tangan terangkat (positif) -->
+  <g class="arms-up" stroke="#2A2226" stroke-width="3" stroke-linejoin="round">
+    <g class="arm-up-l">
+      <path d="M66 198 L50 184 L28 130 L48 122 L74 172 Z" fill="#2D3E66"/>
+      <ellipse cx="37" cy="117" rx="15" ry="14" fill="#F1E8D6"/>
+      <g fill="#E9897F" stroke="none">
+        <ellipse cx="37" cy="121" rx="6" ry="4.5"/>
+        <circle cx="30" cy="113" r="2.4"/><circle cx="37" cy="110" r="2.4"/><circle cx="44" cy="113" r="2.4"/>
+      </g>
+    </g>
+    <g class="arm-up-r">
+      <path d="M174 198 L190 184 L212 130 L192 122 L166 172 Z" fill="#2D3E66"/>
+      <ellipse cx="203" cy="117" rx="15" ry="14" fill="#F1E8D6"/>
+      <g fill="#E9897F" stroke="none">
+        <ellipse cx="203" cy="121" rx="6" ry="4.5"/>
+        <circle cx="196" cy="113" r="2.4"/><circle cx="203" cy="110" r="2.4"/><circle cx="210" cy="113" r="2.4"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Efek -->
+  <g class="sparkles" stroke-linecap="round">
+    <g stroke="#F2B01E" stroke-width="4">
+      <path d="M98 10 L101 20"/><path d="M142 10 L139 20"/>
+      <path d="M58 28 L65 36"/><path d="M182 28 L175 36"/>
+    </g>
+    <g fill="#F28DA6" stroke="#2A2226" stroke-width="1.5">
+      <circle cx="22" cy="62" r="6"/><circle cx="220" cy="70" r="6"/>
+    </g>
+    <circle cx="22" cy="62" r="2" fill="#F2D25E"/><circle cx="220" cy="70" r="2" fill="#F2D25E"/>
+  </g>
+  <g class="fx-think" fill="#FFFFFF" stroke="#2A2226" stroke-width="2">
+    <circle cx="178" cy="52" r="3.5"/>
+    <circle cx="191" cy="40" r="5"/>
+    <circle cx="206" cy="27" r="7"/>
+  </g>
+  <g class="fx-question" font-size="34" font-weight="800" font-family="Fredoka, Nunito, Arial, sans-serif" fill="#F2B01E" stroke="#2A2226" stroke-width="2" paint-order="stroke">
+    <text x="22" y="46">?</text>
+    <text x="184" y="40">?</text>
+  </g>
+  <g class="fx-waves" fill="none" stroke="#2BA8E8" stroke-width="3" stroke-linecap="round">
+    <path d="M48 70 Q40 59 48 48"/>
+    <path d="M37 77 Q25 59 37 41"/>
+  </g>
+</svg>

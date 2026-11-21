@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NgBlu">
+  <!-- Logo SEMENTARA. Jangan edit file ini: taruh logo asli sebagai static/img/logo.png (atau .svg/.webp/.jpg). -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="#46BE5A"/>
+  <rect x="2" y="2" width="60" height="56" rx="16" fill="#58CC6B"/>
+  <path d="M15 18h34a5 5 0 0 1 5 5v15a5 5 0 0 1-5 5H30l-9 7v-7h-6a5 5 0 0 1-5-5V23a5 5 0 0 1 5-5z" fill="#FFFFFF"/>
+  <text x="32" y="37" text-anchor="middle" font-family="'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif" font-weight="700" font-size="17" fill="#34984A">Ng</text>
+</svg>

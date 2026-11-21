@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ brand.name }} · {{ brand.tagline }}</title>
+  <meta name="description" content="{{ brand.name }}: {{ brand.tagline }}. Latihan interview kerja, kepanitiaan, dan beasiswa dengan umpan balik AI.">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename=brand.favicon) }}?v={{ brand.logo_v }}">
+  <meta name="theme-color" content="#12294F">
+  <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fonts.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body data-screen="setup" data-fx="0" data-sidetab="left" data-app-name="{{ brand.name }}">
+
+<!-- Pak Kumis: satu elemen yang dipindah antara layar persiapan dan panggung interview -->
+<template id="cat-template"><div class="cat-frame frame-wide" id="cat-frame">{% include "cat.svg" %}</div></template>
+
+<!-- =================================================================== PERSIAPAN -->
+<section id="screen-setup" class="setup" aria-label="Persiapan latihan">
+  <header class="setup-top">
+    <button type="button" class="icon-btn" id="setup-back" aria-label="Kembali">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="progress" role="progressbar" aria-label="Langkah persiapan" aria-valuemin="0" aria-valuemax="4" aria-valuenow="1">
+      <span id="setup-progress"></span>
+    </div>
+    <span class="brand">
+      <!-- Logo: ganti dengan menaruh static/img/logo.png, tidak perlu mengubah file ini. -->
+      <img class="brand-logo" src="{{ url_for('static', filename=brand.logo) }}?v={{ brand.logo_v }}" alt="" width="32" height="32">
+      <span class="brand-name">{{ brand.name }}</span>
+    </span>
+  </header>
+
+  <div class="setup-body">
+    <div class="mascot-row">
+      <div class="mascot-slot" id="mascot-setup"></div>
+      <p class="speech" id="setup-speech" aria-live="polite">Halo! Saya Pak Kumis. Kita latihan interview bareng, yuk. Mulai dari CV kamu.</p>
+    </div>
+    <p id="mock-note" class="note-pill" hidden>Mode tiruan aktif: jawaban AI berupa contoh tetap.</p>
+
+    <!-- Langkah 1: CV -->
+    <div class="step" data-step="cv">
+      <label class="dropzone" for="cv-file" id="cv-drop">
+        <span class="dz-icon" aria-hidden="true">📄</span>
+        <span class="dz-title" id="cv-file-name">Pilih CV (PDF)</span>
+        <span class="dz-sub">atau tarik file ke sini, maksimal 5 MB</span>
+        <input id="cv-file" type="file" accept="application/pdf" class="sr-only">
+      </label>
+      <button type="button" class="link-btn" id="cv-paste-toggle">Tempel teks CV saja</button>
+      <textarea id="cv-text" rows="6" placeholder="Tempel isi CV kamu di sini" hidden></textarea>
+
+      <div class="samples">
+        <span>Belum punya CV?</span>
+        <button type="button" class="chip" data-sample="cocok">Contoh: cocok</button>
+        <button type="button" class="chip" data-sample="tidak_cocok">Contoh: tidak cocok</button>
+        <button type="button" class="chip" data-sample="kepanitiaan">Contoh: kepanitiaan</button>
+      </div>
+
+      <div class="replay-card">
+        <div>
+          <p class="replay-title">Mau lihat contohnya dulu?</p>
+          <p class="muted">Putar sesi rekaman sekitar 90 detik: tanpa mikrofon, tanpa AI, tanpa internet.</p>
+        </div>
+        <button type="button" class="btn" id="btn-replay">Putar demo</button>
+      </div>
+
+      <div class="field" id="code-box" hidden>
+        <label for="access-code">Kode akses</label>
+        <input id="access-code" type="password" autocomplete="off" placeholder="Minta kode ke tim">
+      </div>
+    </div>
+
+    <!-- Langkah 2: posisi -->
+    <div class="step" data-step="job" hidden>
+      <div class="field">
+        <label for="company">Nama perusahaan atau organisasi</label>
+        <input id="company" type="text" maxlength="80" placeholder="Contoh: PT Maju Bersama">
+      </div>
+      <fieldset class="field">
+        <legend>Jenis seleksi</legend>
+        <div class="choices choices-3">
+          <label class="choice"><input type="radio" name="selection" value="kerja" checked><span class="choice-emoji" aria-hidden="true">💼</span><span class="choice-title">Kerja atau magang</span></label>
+          <label class="choice"><input type="radio" name="selection" value="kepanitiaan"><span class="choice-emoji" aria-hidden="true">🎪</span><span class="choice-title">Kepanitiaan</span></label>
+          <label class="choice"><input type="radio" name="selection" value="beasiswa"><span class="choice-emoji" aria-hidden="true">🎓</span><span class="choice-title">Beasiswa</span></label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="job-text">Deskripsi posisi</label>
+        <textarea id="job-text" rows="7" placeholder="Tempel deskripsi lowongan, open recruitment, atau seleksi beasiswa"></textarea>
+        <label class="file-inline">
+          <input id="job-file" type="file" accept="application/pdf" class="sr-only">
+          <span class="link-btn">atau unggah PDF lowongan</span> <span id="job-file-name" class="muted"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Langkah 3: kecocokan -->
+    <div class="step" data-step="match" hidden>
+      <div class="card match-card">
+        <h2 id="an-title"></h2>
+        <div class="meter" aria-hidden="true"><span id="an-meter"></span></div>
+        <p id="an-score" class="score-line"></p>
+        <p id="an-gate" class="gate" hidden></p>
+        <ul class="reqs" id="an-reqs"></ul>
+      </div>
+    </div>
+
+    <!-- Langkah 4: atur latihan -->
+    <div class="step" data-step="settings" hidden>
+      <fieldset class="field">
+        <legend>Jumlah pertanyaan</legend>
+        <div class="choices choices-4">
+          <label class="choice"><input type="radio" name="nq" value="demo"><span class="choice-title">2</span><span class="choice-sub">Demo</span></label>
+          <label class="choice"><input type="radio" name="nq" value="5" checked><span class="choice-title">5</span><span class="choice-sub">Santai</span></label>
+          <label class="choice"><input type="radio" name="nq" value="7"><span class="choice-title">7</span><span class="choice-sub">Standar</span></label>
+          <label class="choice"><input type="radio" name="nq" value="10"><span class="choice-title">10</span><span class="choice-sub">Lengkap</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="field">
+        <legend>Efek kesadaran</legend>
+        <p class="muted small">Layar meredup pelan saat kamu mulai gugup, supaya kamu sadar dan bisa menenangkan diri.</p>
+        <div class="choices choices-3">
+          <label class="choice"><input type="radio" name="fx" value="off"><span class="choice-title">Mati</span><span class="choice-sub">Tanpa efek</span></label>
+          <label class="choice"><input type="radio" name="fx" value="gentle" checked><span class="choice-title">Lembut</span><span class="choice-sub">Vignette saja</span></label>
+          <label class="choice"><input type="radio" name="fx" value="full"><span class="choice-title">Penuh</span><span class="choice-sub">Blur dan napas</span></label>
+        </div>
+      </fieldset>
+      <div class="field-row">
+        <div class="field">
+          <label for="language">Bahasa interview</label>
+          <select id="language">
+            <option value="id">Bahasa Indonesia</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <label class="toggle"><input type="checkbox" id="voice" checked><span class="toggle-ui" aria-hidden="true"></span>Pak Kumis bersuara</label>
+      </div>
+      <div class="mic-test">
+        <button type="button" class="btn" id="btn-mic-test">Tes mikrofon</button>
+        <div class="level" aria-hidden="true"><span id="mic-test-level"></span></div>
+        <span class="muted small" id="mic-test-note">Bicara sebentar setelah menekan tombol.</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="actionbar">
+    <div class="actionbar-inner">
+      <p class="error" id="setup-error" role="alert"></p>
+      <button type="button" class="btn btn-primary btn-wide" id="setup-primary" disabled>Lanjut</button>
+    </div>
+  </footer>
+</section>
+
+<!-- =================================================================== INTERVIEW -->
+<section id="screen-interview" class="interview" aria-label="Sesi interview" hidden>
+  <header class="iv-top">
+    <button type="button" class="icon-btn" id="btn-exit" aria-label="Akhiri latihan">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+    </button>
+    <span class="brand brand-compact" title="{{ brand.name }}">
+      <img class="brand-logo" src="{{ url_for('static', filename=brand.logo) }}?v={{ brand.logo_v }}" alt="{{ brand.name }}" width="28" height="28">
+    </span>
+    <span class="demo-badge" id="demo-badge" hidden title="Sesi rekaman: tanpa mikrofon, tanpa panggilan AI">DEMO · rekaman</span>
+    <div class="progress" role="progressbar" aria-label="Pertanyaan" aria-valuemin="0"><span id="iv-progress"></span></div>
+    <span class="xp-pill" id="xp-pill"><span aria-hidden="true">⚡</span> <span id="xp-value">0</span> XP</span>
+    <label class="fx-select">
+      <span class="sr-only">Efek kesadaran</span>
+      <select id="fx-mode">
+        <option value="off">Efek mati</option>
+        <option value="gentle">Efek lembut</option>
+        <option value="full">Efek penuh</option>
+      </select>
+    </label>
+  </header>
+
+  <main class="iv">
+    <nav class="side-tabs" aria-label="Panel">
+      <button type="button" data-sidetab="left" aria-pressed="true">Transkrip</button>
+      <button type="button" data-sidetab="right" aria-pressed="false">Statistik</button>
+    </nav>
+
+    <!-- KIRI: transkrip ala Grammarly -->
+    <aside class="side side-left panel" aria-label="Transkrip dan umpan balik">
+      <div class="panel-head"><h2>Transkrip</h2><span class="live-dot" id="live-dot" hidden>Mendengarkan</span></div>
+      <div class="transcript" id="transcript"></div>
+      <div class="sugg-card" id="sugg-card" role="dialog" aria-label="Saran" hidden></div>
+      <div class="catbar" id="catbar"></div>
+    </aside>
+
+    <!-- TENGAH: Pak Kumis -->
+    <section class="center" aria-label="Pewawancara">
+      <div class="q-dots" id="q-dots" aria-hidden="true"></div>
+      <div class="stage" id="stage">
+        <p class="scene" id="scene-caption"></p>
+        <p class="fx-toast" id="fx-toast" role="status" hidden></p>
+        <div class="breath" id="breath" hidden>
+          <span class="breath-circle" aria-hidden="true"></span>
+          <span class="breath-text" id="breath-text">Tarik napas</span>
+        </div>
+        <div class="cat-slot" id="cat-slot"></div>
+      </div>
+      <div class="dialog">
+        <span class="nametag" id="nametag">Pak Kumis</span>
+        <p id="dialog-text" aria-live="polite"></p>
+      </div>
+      <div class="controls">
+        <button type="button" class="btn btn-round" id="btn-repeat" disabled>Ulangi</button>
+        <button type="button" class="mic-btn" id="btn-mic" data-state="start" aria-label="Mulai panggilan">
+          <svg class="ico-phone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.6a1 1 0 01-.25 1z" fill="currentColor"/></svg>
+          <svg class="ico-mic" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          <svg class="ico-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2.5" fill="currentColor"/></svg>
+        </button>
+        <button type="button" class="btn btn-round" id="btn-skip" disabled>Lewati</button>
+      </div>
+      <div class="mic-status">
+        <div class="level" aria-hidden="true"><span id="mic-level"></span></div>
+        <p id="mic-status-text">Tekan tombol hijau untuk memulai panggilan.</p>
+        <span class="timer" id="rec-timer"></span>
+      </div>
+
+      <div class="type-box" id="type-box" hidden>
+        <p class="muted small" id="type-note"></p>
+        <label for="type-answer" class="sr-only">Jawaban</label>
+        <textarea id="type-answer" rows="3" placeholder="Ketik jawabanmu di sini"></textarea>
+        <button type="button" class="btn btn-primary" id="type-send">Kirim jawaban</button>
+      </div>
+
+      <div class="banner" id="banner" role="status" aria-live="polite" hidden>
+        <div class="banner-inner">
+          <div class="banner-text">
+            <p class="banner-title"><span class="banner-icon" aria-hidden="true"></span><span id="banner-title"></span> <span class="banner-xp" id="banner-xp"></span></p>
+            <p class="banner-strength" id="banner-strength"></p>
+            <ul class="banner-list" id="banner-list"></ul>
+          </div>
+          <button type="button" class="btn btn-primary" id="banner-btn">Lanjut</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- KANAN: statistik ala chess.com -->
+    <aside class="side side-right panel" aria-label="Statistik">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" data-tab="live" aria-selected="true">Langsung</button>
+        <button type="button" role="tab" data-tab="review" aria-selected="false">Review</button>
+        <button type="button" role="tab" data-tab="details" aria-selected="false">Detail</button>
+      </div>
+      <div class="tab-body" data-tabpanel="live">
+        <div class="graph-card" id="graph-card">
+          <p class="graph-label">Skor langsung <strong id="live-score">100</strong></p>
+          <div class="graph" id="graph"></div>
+        </div>
+        <div class="tiles" id="tiles"></div>
+        <ol class="events" id="events"></ol>
+      </div>
+      <div class="tab-body" data-tabpanel="review" hidden>
+        <div class="graph-card"><div class="graph" id="graph-review"></div></div>
+        <div id="review-card"></div>
+      </div>
+      <div class="tab-body" data-tabpanel="details" hidden>
+        <div id="details"></div>
+      </div>
+    </aside>
+  </main>
+</section>
+
+<!-- Efek kesadaran: tidak pernah menutupi panel tengah (z-index panel tengah lebih tinggi) -->
+<div class="fx-vignette" id="fx-vignette" aria-hidden="true"></div>
+<div class="fx-recover" id="fx-recover" aria-hidden="true"></div>
+
+<!-- =================================================================== MODAL -->
+<div class="modal" id="explainer" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="explainer-title">
+    <h2 id="explainer-title">Satu hal sebelum mulai</h2>
+    <p>Saat kamu mulai gugup (banyak kata pengisi, jeda panjang, atau bicara terlalu cepat), tepi layar akan memerah pelan. Itu bukan hukuman, hanya pengingat untuk menarik napas.</p>
+    <p class="muted small">Pak Kumis dan teks pertanyaan tidak akan pernah tertutup efek ini. Kamu bisa mengubahnya kapan saja lewat menu Efek di atas.</p>
+    <div class="progress progress-thin" aria-hidden="true"><span id="explainer-progress"></span></div>
+    <button type="button" class="btn btn-primary btn-wide" id="explainer-ok">Mengerti</button>
+  </div>
+</div>
+
+<div class="modal" id="confirm-exit" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="exit-title">
+    <h2 id="exit-title">Akhiri latihan sekarang?</h2>
+    <p class="muted">Jawaban yang sudah ada tetap bisa dinilai.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="exit-cancel">Lanjut latihan</button>
+      <button type="button" class="btn btn-danger" id="exit-summary">Akhiri dan nilai</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="summary" hidden>
+  <div class="modal-card summary-card" role="dialog" aria-modal="true" aria-labelledby="summary-title">
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
+    <h2 id="summary-title">Latihan selesai!</h2>
+    <div class="summary-top">
+      <div class="ring" id="score-ring">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="52" class="ring-bg"/>
+          <circle cx="60" cy="60" r="52" class="ring-fg" id="ring-fg"/>
+        </svg>
+        <span class="ring-value" id="ring-value">0</span>
+      </div>
+      <div class="summary-stats">
+        <p><strong id="sum-score-label">Skor latihan</strong></p>
+        <p class="xp-big"><span aria-hidden="true">⚡</span> <span id="sum-xp">0</span> XP</p>
+        <p class="muted small" id="sum-avg"></p>
+      </div>
+    </div>
+    <p class="error" id="summary-error" role="alert"></p>
+    <div id="sum-body">
+      <h3>3 hal yang perlu dilatih</h3>
+      <ol class="weak-list" id="sum-weak"></ol>
+      <div class="strength-card"><span aria-hidden="true">💪</span> <span id="sum-strength"></span></div>
+      <h3>Rekomendasi untuk sesi berikutnya</h3>
+      <ol class="rec-list" id="sum-recs"></ol>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="sum-review">Lihat review</button>
+      <button type="button" class="btn btn-primary" id="sum-again">Latihan lagi</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/config.js') }}"></script>
+<script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+<script src="{{ url_for('static', filename='js/seed.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
